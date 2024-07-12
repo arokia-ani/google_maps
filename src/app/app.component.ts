@@ -12,8 +12,8 @@ export class AppComponent {
 
   constructor(private mapsAPILoader: MapsAPILoader,private ngZone: NgZone) { }
   zoom: number = 15;
-  latitude: number = 0;
-  longitude:number=0;
+  latitude: number = 11.1271; // Latitude for Tamil Nadu
+  longitude: number = 78.6569; // Longitude for Tamil Nadu
   lastInfoWindow: any;
   public searchControl!: FormControl;
 
@@ -101,10 +101,11 @@ export class AppComponent {
   };
 
   mapClicked($event: any) {
+    console.log($event)
     this.latitude = $event.coords.lat;
     this.longitude = $event.coords.lng;
 
-    console.log(this.marker.lat,this.marker.lng,"clicked")
+    console.log(this.latitude,this.longitude,"clicked")
   }
 
   markerDragEnd($event: any) {
