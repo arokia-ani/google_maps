@@ -1,0 +1,41 @@
+<h1 class="text-center">Angular Google Maps</h1>
+
+<div class="form-group" style="width: 100%;">
+	<input placeholder="search for location" autocorrect="off" autocapitalize="off" spellcheck="off" type="search" class="form-control" #search [formControl]="searchControl"
+	style="width: 100%; height: 45px;">
+  </div>
+
+<!-- <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" [disableDefaultUI]="false" [zoomControl]="false"
+	(mapClick)="mapClicked($event)">
+
+	<agm-marker *ngFor="let marker of markers; let i = index" (markerClick)="markerClicked(marker, i, infoWindowRef)"
+		[latitude]="marker.lat" [longitude]="marker.lng" [label]="marker.label" [markerDraggable]="marker.draggable"
+		(dragEnd)="markerDragEnd($event, i)">
+
+		<agm-info-window #infoWindowRef>
+			<b>{{marker.lat}}, {{marker.lng}}</b>
+		</agm-info-window>
+
+	</agm-marker>
+
+	<agm-circle [latitude]="latitude" [longitude]="longitude" [radius]="500" [fillColor]="'skyblue'"
+		[circleDraggable]="false" [editable]="false"   [strokeColor]="'#5E81F4'" [strokeWeight]="2">
+	</agm-circle>
+
+</agm-map> -->
+
+<agm-map [latitude]="latitude" [longitude]="longitude" [scrollwheel]="true" [zoom]="zoom" [disableDefaultUI]="false" [zoomControl]="true"
+    (mapClick)="mapClicked($event)" >
+
+    <agm-marker *ngIf="marker" [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true" 
+        (dragEnd)="markerDragEnd($event)">
+        <agm-info-window>
+            <b>{{ marker.lat }}, {{ marker.lng }}</b>
+        </agm-info-window>
+    </agm-marker>
+
+    <!-- <agm-circle [latitude]="latitude" [longitude]="longitude" [radius]="100" [fillColor]="'skyblue'"
+        [circleDraggable]="false" [editable]="false" [strokeColor]="'#5E81F4'" [strokeWeight]="2">
+    </agm-circle> -->
+
+</agm-map>
