@@ -14,7 +14,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserModule,
     ReactiveFormsModule,
     AgmCoreModule.forRoot({
-      apiKey: environment.googleApiKey
+      apiKey: environment.googleApiKey,
+      libraries: ['places'],
     })
   ],
   providers: [],

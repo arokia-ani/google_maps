@@ -12,10 +12,14 @@ export class AppComponent {
 
   constructor(private mapsAPILoader: MapsAPILoader,private ngZone: NgZone) { }
   zoom: number = 15;
-  latitude: number = 11.1271; // Latitude for Tamil Nadu
-  longitude: number = 78.6569; // Longitude for Tamil Nadu
+  latitude: number=0; // Latitude for Tamil Nadu
+  longitude: number = 0; // Longitude for Tamil Nadu
   lastInfoWindow: any;
   public searchControl!: FormControl;
+  address: any;
+  web_site: any;
+  name: any;
+  zip_code: any;
 
   @ViewChild('search', { static: true })
   public searchElementRef!: ElementRef;
@@ -24,34 +28,34 @@ export class AppComponent {
     this.setCurrentLocation();
         //create search FormControl
         this.searchControl = new FormControl();
-
-        //set current position
-        
-        // this.recenterMap()
-    
         //load Places Autocomplete
         this.mapsAPILoader.load().then(() => {
-          let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
-            types: ["address"]
-          });
-          autocomplete.addListener("place_changed", () => {
+          let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
+          autocomplete.addListener('place_changed', () => {
             this.ngZone.run(() => {
-              //get the place result
               let place: google.maps.places.PlaceResult = autocomplete.getPlace();
     
-              //verify result
-              if (place.geometry === undefined || place.geometry === null) {
-                return;
+              this.address = place.formatted_address || '';
+              this.web_site = place.website || '';
+              this.name = place.name || '';
+    
+              if (place.address_components && place.address_components.length > 0) {
+                this.zip_code = place.address_components[place.address_components.length - 1].long_name || '';
+              } else {
+                this.zip_code = '';
               }
     
-              //set latitude, longitude and zoom
-              this.latitude = place.geometry.location.lat();
-              this.longitude = place.geometry.location.lng();
-              this.zoom = 15;
+              if (place.geometry && place.geometry.location) {
+                this.latitude = place.geometry.location.lat ? place.geometry.location.lat() : 0;
+                this.longitude = place.geometry.location.lng ? place.geometry.location.lng() : 0;
+              } 
+              this.zoom = 12;
             });
           });
         });
-  }
+      }
+  
+  
 
     private setCurrentLocation() {
       if ('geolocation' in navigator) {
@@ -64,28 +68,6 @@ export class AppComponent {
       }
     }
   
-    
-
-  markers: any[] = [
-    {
-      lat: 8.191696574280853,
-      lng: 77.39770121126837,
-      label: { color: 'white', text: 'P1' },
-    },
-    {
-      lat: 28.625293,
-      lng: 79.817926,
-      label: { color: 'white', text: 'P2' },
-      draggable: false
-    },
-    {
-      lat: 28.625182,
-      lng: 79.814640,
-      label: { color: 'white', text: 'P3' },
-      draggable: true
-    }
-  ]
-
   markerClicked(marker: any, index: number, infoWindowRef: any) {
     if (this.lastInfoWindow) {
       this.lastInfoWindow.close();
