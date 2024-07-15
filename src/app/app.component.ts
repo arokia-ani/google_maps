@@ -48,25 +48,53 @@ export class AppComponent {
               if (place.geometry && place.geometry.location) {
                 this.latitude = place.geometry.location.lat ? place.geometry.location.lat() : 0;
                 this.longitude = place.geometry.location.lng ? place.geometry.location.lng() : 0;
+                console.log(this.latitude,this.longitude,"lonsearch")
               } 
-              this.zoom = 12;
+              this.zoom = 18;
             });
           });
         });
-      }
-  
-  
 
-    private setCurrentLocation() {
-      if ('geolocation' in navigator) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          this.latitude = position.coords.latitude;
-          this.longitude = position.coords.longitude;
-          console.log(this.latitude,this.longitude,"lat-lon");
-          
-        });
+        
       }
-    }
+  
+  
+      private setCurrentLocation() {
+        if ('geolocation' in navigator) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            this.latitude = position.coords.latitude;
+            this.longitude = position.coords.longitude;
+            console.log('Latitude:', this.latitude);
+            console.log('Longitude:', this.longitude);
+      
+            // Reverse Geocoding to get address
+            this.mapsAPILoader.load().then(() => {
+              const geocoder = new google.maps.Geocoder();
+              const latlng = {
+                lat: this.latitude,
+                lng: this.longitude
+              };
+      
+              geocoder.geocode({ 'location': latlng }, (results, status) => {
+                if (status === 'OK') {
+                  if (results[0]) {
+                    this.address = results[0].formatted_address;
+                    console.log('Address:', this.address);
+                    // Optionally, you can set this.address to a variable to display in your template
+                  } else {
+                    console.log('No results found');
+                  }
+                } else {
+                  console.log('Geocoder failed due to: ' + status);
+                }
+              });
+            });
+          });
+        } else {
+          console.log('Geolocation is not supported by this browser.');
+        }
+      }
+      
   
   markerClicked(marker: any, index: number, infoWindowRef: any) {
     if (this.lastInfoWindow) {
